@@ -31,12 +31,12 @@ class Answer {
         return $stmt->execute();
     }
 
-    public function isCorrect($question_id, $answer_id) {
-        $stmt = $this->conn->prepare("SELECT is_correct FROM answers WHERE question_id = ? AND id = ?");
-        $stmt->bind_param("ii", $question_id, $answer_id);
+    public function isCorrect($question_id, $answer) {
+        $stmt = $this->conn->prepare("SELECT correctAnswer FROM questions WHERE id = ?");
+        $stmt->bind_param("i", $question_id);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_assoc();
-        return $result['is_correct'];
+        return $result['correctAnswer'] == $answer;
     }
 }
 ?>

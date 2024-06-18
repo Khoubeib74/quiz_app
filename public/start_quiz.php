@@ -32,7 +32,9 @@ $questions = $quizQuestion->getQuestionsForQuiz($quiz_id);
                 <div class="question" data-question-id="<?= $question['id'] ?>">
                     <h2><?= $question['question'] ?></h2>
                     <?php foreach ($question['options'] as $index => $option): ?>
-                        <button class="answer-option" data-answer-id="<?= $index + 1 ?>"><?= $option ?></button>
+                        <button class="answer-option" data-answer-index="<?= $index + 1 ?>">
+                            <?= $option ?>
+                        </button>
                     <?php endforeach; ?>
                 </div>
             <?php endforeach; ?>
@@ -59,7 +61,7 @@ $questions = $quizQuestion->getQuestionsForQuiz($quiz_id);
         timer = setInterval(function() {
             if (timeLeft <= 0) {
                 clearInterval(timer);
-                alert('Time is up!');
+                console.log('Time is up!');
                 nextQuestion();
             } else {
                 $('#timer').text(timeLeft + ' seconds remaining');
@@ -89,21 +91,21 @@ $questions = $quizQuestion->getQuestionsForQuiz($quiz_id);
 
         $('.answer-option').click(function() {
             let questionId = $(this).closest('.question').data('question-id');
-            let answerId = $(this).data('answer-id');
+            let answerIndex = $(this).data('answer-index');
             
-            $.ajax({
+            $.getJSON({
                 url: 'validate_answer.php',
                 type: 'POST',
                 data: {
                     question_id: questionId,
-                    answer_id: answerId
+                    answer_index: answerIndex
                 },
                 success: function(response) {
                     if (response.correct) {
-                        alert('Correct!');
+                        console.log('Correct!');
                         score++;
                     } else {
-                        alert('Wrong!');
+                        console.log('Wrong!');
                     }
                     nextQuestion();
                 }
